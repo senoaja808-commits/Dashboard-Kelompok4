@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+{% block title %}Contact - Portfolio{% endblock %}
+
+{% block content %}
+<style>
+    /* Section Wrapper & Spacing */
+    .contact-section {
+        max-width: 650px;
+        margin: 60px auto;
+        padding: 0 24px;
+        position: relative;
+        animation: premiumFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Premium Glow-Tracker Card Layout */
+    .contact-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-glow);
+        border-radius: 28px;
+        padding: 50px 40px;
+        box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.08);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+    }
+
+    body.dark-mode .contact-card {
+        box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Efek Pendaran Cahaya Mengikuti Kursor (Dynamic Mouse Aura) */
+    .mouse-glow-bg {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0;
+        transform: translate(-50%, -50%);
+        transition: opacity 0.5s ease;
+        z-index: 1;
+    }
+
+    .contact-card:hover .mouse-glow-bg {
+        opacity: 0.6;
+    }
+
+    /* Memastikan Form Tetap Berada di Atas Latar Belakang Glow */
+    .contact-card form, .contact-header {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Header Styling */
+    .contact-header {
+        margin-bottom: 45px;
+        text-align: center;
+    }
+
+    .contact-header h2 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: -0.03em;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .contact-header p {
+        font-size: 0.92rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+
+    /* Form Fields Modernization dengan Floating Label */
+    .form-group {
+        margin-bottom: 32px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .form-group label {
+        position: absolute;
+        left: 4px;
+        top: 14px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        pointer-events: none;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .form-control {
+        width: 100%;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        padding: 14px 4px;
+        background-color: transparent;
+        border: none;
+        border-bottom: 2px solid var(--border-glow);
+        color: var(--text-primary);
+        border-radius: 0;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    /* Efek Floating Label saat Input Aktif */
+    .form-control:focus ~ label,
+    .form-control:not(:placeholder-shown) ~ label {
+        top: -12px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--accent-color);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    /* Garis Bawah Interaktif Yang Melebar dari Tengah */
+    .form-group::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background-color: var(--accent-color);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: translateX(-50%);
+    }
+
+    .form-group:focus-within::after {
+        width: 100%;
+    }
+
+    /* Khusus untuk Textarea & Counter */
+    textarea.form-control {
+        border: 2px solid var(--border-glow);
+        border-radius: 14px;
+        padding: 16px;
+        background-color: var(--bg-base);
+    }
+
+    .form-group:has(textarea) label {
+        left: 16px;
+        top: 16px;
+    }
+
+    .form-group:has(textarea):focus-within::after,
+    .form-group:has(textarea):not(:placeholder-shown)::after {
+        display: none;
+    }
+
+    .form-group:has(textarea) .form-control:focus ~ label,
+    .form-group:has(textarea) .form-control:not(:placeholder-shown) ~ label {
+        top: -22px;
+        left: 4px;
+    }
+
+    .form-group:has(textarea):focus-within textarea {
+        border-color: var(--accent-color);
+    }
+
+    .char-counter {
+        align-self: flex-end;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin-top: 6px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .form-group:focus-within .char-counter {
+        opacity: 1;
+    }
+
+    /* Magnetic Submit Button Container */
+    .magnetic-wrap {
+        display: block;
+        width: 100%;
+        margin-top: 40px;
+        position: relative;
+    }
+
+    .btn-custom-submit {
+        width: 100%;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #ffffff;
+        background: linear-gradient(135deg, var(--accent-color) 0%, #0052cc 100%);
+        border: none;
+        padding: 18px;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 8px 24px var(--accent-glow);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        transition: box-shadow 0.3s ease, transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+        will-change: transform;
+    }
+
+    .btn-custom-submit:hover {
+        box-shadow: 0 12px 30px var(--accent-glow);
+    }
+
+    .btn-custom-submit svg {
+        transition: transform 0.3s ease;
+    }
+
+    .btn-custom-submit:hover svg {
+        transform: translateX(4px);
+    }
+
+    @keyframes premiumFadeIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+        .contact-card { padding: 35px 24px; border-radius: 24px; }
+        .contact-header h2 { font-size: 1.7rem; }
+    }
+</style>
+
+<div class="container contact-section">
+    <div class="contact-card" id="interactiveCard">
+        <div class="mouse-glow-bg" id="mouseGlow"></div>
+        
+        <div class="contact-header">
+            <h2>Get in Touch</h2>
+            <p>Have an inquiry, a technical proposal, or an automated design concept? Let's collaborate.</p>
+        </div>
+
+        <form method="POST" action="" id="contactForm">
+            {{ form.hidden_tag() }}
+            
+            <div class="form-group">
+                {{ form.name(class="form-control", id="name", placeholder=" ") }}
+                <label for="name">Your Name</label>
+            </div>
+            
+            <div class="form-group">
+                {{ form.email(class="form-control", id="email", placeholder=" ") }}
+                <label for="email">Email Address</label>
+            </div>
+            
+            <div class="form-group">
+                {{ form.message(class="form-control", id="message", rows=4, maxlength=500, placeholder=" ") }}
+                <label for="message">Message Details</label>
+                <div class="char-counter"><span id="charCount">0</span> / 500</div>
+            </div>
+            
+            <div class="magnetic-wrap" id="magneticContainer">
+                <button type="submit" class="btn-custom-submit" id="magneticBtn">
+                    <span>Send Message</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3.33334 8H12.6667" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 3.33334L12.6667 8L8 12.6667" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+    // 1. TRACKING MOUSE GLOW AURA EFFECT
+    const card = document.getElementById('interactiveCard');
+    const glow = document.getElementById('mouseGlow');
+
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        glow.style.left = `${x}px`;
+        glow.style.top = `${y}px`;
+    });
+
+    // 2. CHARACTER COUNTER FOR TEXTAREA
+    const messageInput = document.getElementById('message');
+    const charCount = document.getElementById('charCount');
+
+    messageInput.addEventListener('input', () => {
+        charCount.textContent = messageInput.value.length;
+    });
+
+    // 3. MAGNETIC BUTTON INTERACTION (Efek Tombol Penyedot Kursor)
+    const magneticContainer = document.getElementById('magneticContainer');
+    const magneticBtn = document.getElementById('magneticBtn');
+
+    magneticContainer.addEventListener('mousemove', (e) => {
+        const mRect = magneticBtn.getBoundingClientRect();
+        
+        // Cari titik tengah dari tombol
+        const btnCenterX = mRect.left + mRect.width / 2;
+        const btnCenterY = mRect.top + mRect.height / 2;
+
+        // Hitung jarak kursor dari titik tengah tombol
+        const deltaX = e.clientX - btnCenterX;
+        const deltaY = e.clientY - btnCenterY;
+
+        // Geser posisi tombol secara halus (kekuatan tarikan magnet dibagi 3)
+        magneticBtn.style.transform = `translate(${deltaX * 0.35}px, ${deltaY * 0.35}px)`;
+    });
+
+    // Kembalikan posisi tombol ke semula saat kursor menjauh
+    magneticContainer.addEventListener('mouseleave', () => {
+        magneticBtn.style.transform = 'translate(0px, 0px)';
+    });
+</script>
+{% endblock %}

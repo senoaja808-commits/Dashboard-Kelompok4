@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Portfolio{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        /* Modern Design System Color Variables */
+        :root {
+            --bg-base: #f8fafc;
+            --bg-surface: rgba(255, 255, 255, 0.75);
+            --border-glow: rgba(0, 0, 0, 0.06);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --accent-color: #0066ff;
+            --accent-glow: rgba(0, 102, 255, 0.15);
+            --card-bg: #ffffff;
+        }
+
+        body.dark-mode {
+            --bg-base: #030712;
+            --bg-surface: rgba(17, 24, 39, 0.7);
+            --border-glow: rgba(255, 255, 255, 0.05);
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --accent-color: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.2);
+            --card-bg: #111827;
+        }
+
+        /* Reset & Core Layout */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            transition: background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Floating Capsule Navbar */
+        .navbar-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            transition: padding 0.3s ease;
+        }
+        
+        nav {
+            background-color: var(--bg-surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            border-radius: 100px;
+            padding: 0 32px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.04);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body.dark-mode nav {
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 65px;
+        }
+
+        /* Logo Typo-art */
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.04em;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        /* Sleek Minimalist Navigation Links */
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: all 0.25s ease;
+        }
+
+        .nav-links li a:hover {
+            color: var(--accent-color);
+            background-color: var(--accent-glow);
+        }
+
+        /* Icons Area & Theme Toggle */
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        #theme-toggle {
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        #theme-toggle i {
+            transition: transform 0.25s ease;
+        }
+
+        #theme-toggle:hover {
+            color: var(--text-primary);
+            background-color: var(--bg-surface);
+            transform: scale(1.05);
+        }
+
+        /* Hamburger Menu for Mobile Viewports */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 20px;
+            height: 14px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 2px;
+            background-color: var(--text-primary);
+            border-radius: 4px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Hamburger Morphing Interface Animations */
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(10px);
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        /* Main Workspace Area */
+        main {
+            flex: 1;
+            padding-bottom: 60px;
+        }
+
+        /* Clean Modern Borderless Footer */
+        footer {
+            padding: 40px 0;
+            background-color: transparent;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: 500;
+            opacity: 0.7;
+        }
+
+        /* Mobile & Tablet Responsive Engine Layouts */
+        @media (max-width: 850px) {
+            .navbar-wrapper {
+                padding: 12px 16px;
+            }
+            nav {
+                border-radius: 24px;
+                padding: 0 20px;
+            }
+            .nav-links {
+                position: fixed;
+                top: 90px;
+                left: 16px;
+                right: 16px;
+                background-color: var(--card-bg);
+                border: 1px solid var(--border-glow);
+                flex-direction: column;
+                padding: 24px;
+                gap: 12px;
+                border-radius: 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                transform: translateY(-20px);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .nav-links li a {
+                display: block;
+                padding: 12px 16px;
+                border-radius: 12px;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="light-mode">
+
+    <div class="navbar-wrapper">
+        <div class="container">
+            <nav>
+                <div class="nav-container">
+                    <a href="/" class="logo">Our Portfolio<span>.</span></a>
+                    
+                    <ul class="nav-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/abouts">About</a></li>
+                        <li><a href="/projects">Projects</a></li>
+                        <li><a href="/skills">Skills</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+
+                    <div class="nav-icons">
+                        <div id="theme-toggle" title="Toggle Theme">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <div class="hamburger">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 TPK24 &bull; Crafted with precision</p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Trigger Mobile Menu Hamburgers
+            $('.hamburger').click(function() {
+                $(this).toggleClass('active');
+                $('.nav-links').toggleClass('active');
+            });
+            
+            // Auto close mobile dropdown on navigation item clicks
+            $('.nav-links a').click(function() {
+                $('.hamburger').removeClass('active');
+                $('.nav-links').removeClass('active');
+            });
+
+            // Theme Toggle Execution: Maintains default FontAwesome core rules
+            $('#theme-toggle').click(function() {
+                const icon = $(this).find('i');
+                icon.css('transform', 'scale(0) rotate(90deg)');
+                
+                setTimeout(() => {
+                    // Detect icon layout based explicitly on present active class rules
+                    if (icon.hasClass('fa-moon')) {
+                        icon.attr('class', 'fas fa-sun');
+                    } else {
+                        icon.attr('class', 'fas fa-moon');
+                    }
+                    icon.css('transform', 'scale(1) rotate(0deg)');
+                }, 200);
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

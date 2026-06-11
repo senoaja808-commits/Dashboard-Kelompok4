@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% block title %}Projects - Portfolio{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Main Wrapper for Projects Page */
+    .projects-section {
+        padding: 60px 24px;
+        animation: pageReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Premium Page Header */
+    .projects-title {
+        text-align: center;
+        margin-bottom: 48px;
+    }
+
+    .projects-title h2 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: -0.03em;
+        margin-bottom: 12px;
+    }
+
+    .projects-title p {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        max-width: 550px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Balanced 2-Column Grid Layout */
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Locks into a sleek two-column view */
+        gap: 32px;
+        max-width: 950px; /* Constrained slightly to prevent cards from stretching excessively */
+        margin: 0 auto;
+    }
+
+    /* Premium Glassmorphism Card Architecture */
+    .project-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-glow);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.05);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+    }
+
+    body.dark-mode .project-card {
+        box-shadow: 0 15px 35px -15px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Elevated Card Hover State */
+    .project-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--accent-color);
+        box-shadow: 0 20px 40px -15px var(--accent-glow);
+    }
+
+    /* Image Frame with Smooth Zoom Effect */
+    .project-img-wrapper {
+        position: relative;
+        width: 100%;
+        height: 240px; /* Optimized height proportion for the 2-column layout */
+        overflow: hidden;
+        background-color: var(--bg-base);
+    }
+
+    .project-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .project-card:hover .project-img-wrapper img {
+        transform: scale(1.08);
+    }
+
+    /* Inner Card Content Spacing */
+    .card-content {
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 16px;
+    }
+
+    .card-content h3 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.01em;
+        line-height: 1.4;
+    }
+
+    .card-content p {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        flex-grow: 1; /* Forces description to fill empty space so buttons stay perfectly aligned */
+    }
+
+    /* Minimalist Tech Stack Badges */
+    .tech-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 4px;
+    }
+
+    .tag {
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        background-color: var(--bg-base);
+        border: 1px solid var(--border-glow);
+        padding: 6px 14px;
+        border-radius: 50px;
+        transition: all 0.25s ease;
+    }
+
+    .project-card:hover .tag {
+        border-color: rgba(0, 102, 255, 0.15);
+        color: var(--accent-color);
+        background-color: var(--accent-glow);
+    }
+
+    /* Capsule Action Button */
+    .btn-project-detail {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 14px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #ffffff;
+        background-color: var(--accent-color);
+        border: none;
+        border-radius: 50px;
+        text-decoration: none;
+        cursor: pointer;
+        box-shadow: 0 4px 12px var(--accent-glow);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        margin-top: 8px;
+    }
+
+    .btn-project-detail:hover {
+        background-color: #0052cc;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px var(--accent-glow);
+    }
+
+    .btn-project-detail i {
+        font-size: 0.8rem;
+        transition: transform 0.25s ease;
+    }
+
+    .btn-project-detail:hover i {
+        transform: translateX(3px);
+    }
+
+    /* Page Entrance Animation */
+    @keyframes pageReveal {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive Queries for Tablets and Smartphones */
+    @media (max-width: 768px) {
+        .projects-grid {
+            grid-template-columns: 1fr; /* Stacks into 1 column on mobile displays */
+            max-width: 450px;
+        }
+        .projects-title h2 {
+            font-size: 1.8rem;
+        }
+        .card-content {
+            padding: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container projects-section">
+    
+    <div class="projects-title">
+        <h2>Latest Engineering Projects</h2>
+        <p>Exploration of innovative systems, advanced control paradigms, and technical research developments engineered by our team.</p>
+    </div>
+
+    <div class="projects-grid">
+        {% for project in projects[:2] %}
+        <div class="project-card">
+            
+            <div class="project-img-wrapper">
+                <img src="{{ project.img }}" alt="{{ project.title }}">
+            </div>
+            
+            <div class="card-content">
+                <h3>{{ project.title }}</h3>
+                <p>{{ project.desc }}</p>
+                
+                <div class="tech-tags">
+                    {% for tech in project.tech %}
+                    <span class="tag">{{ tech }}</span>
+                    {% endfor %}
+                </div>
+                
+                <a href="{{ project.link }}" class="btn-project-detail" target="_blank">
+                    View Details <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

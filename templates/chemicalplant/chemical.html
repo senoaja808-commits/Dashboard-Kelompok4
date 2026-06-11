@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Home - Portfolio{% endblock %}
+{% block extra_css %}
+<style>
+    .hero {
+        height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+    .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="hero">
+    <div class="hero-content">
+        <h1>Chemical Plant Process</h1>
+        <p class="subtitle">{{ data.role if data else 'Process, Automation, AI Engineer' }}</p>
+        <div class="cta-buttons">
+            <a href="/chemicalplant/ca" class="btn btn-primary">Chlor Alkali</a>
+            <a href="/chemicalplant/clo2" class="btn btn-outline">Clhorine Dioxide</a>
+             <a href="/chemicalplant/oxygen" class="btn btn-primary">Oxygen</a>
+              <a href="/chemicalplant/h2o2" class="btn btn-primary">H2O2</a>
+        </div>
+        <div style="text-align: left;">
+            <style>
+                .zoom {
+                    transition: transform 0.5s;
+                }
+                .zoom:hover {
+                    transform: scale(1.2);
+                }
+            </style>
+            <img src="static/images/goku3.png" class="zoom" alt="Deskripsi" width="300" height="400">
+        </div>
+    </div>
+</div>
+<marquee behavior="alternate">Selamat datang di website TPK24!</marquee>
+{% endblock %}

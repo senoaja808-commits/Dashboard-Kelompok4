@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block title %}Skills - Portfolio{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Main Wrapper for Skills Page */
+    .skills-section {
+        padding: 60px 24px;
+        animation: pageReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Premium Page Header */
+    .skills-title {
+        text-align: center;
+        margin-bottom: 56px;
+    }
+
+    .skills-title h2 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: -0.03em;
+        margin-bottom: 14px;
+    }
+
+    .skills-title p {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        max-width: 680px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Category Container */
+    .skills-container {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        max-width: 950px;
+        margin: 0 auto;
+    }
+
+    /* Modified Skill Category Card */
+    .skill-category {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-glow);
+        border-radius: 20px;
+        padding: 36px;
+        box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.03);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body.dark-mode .skill-category {
+        box-shadow: 0 15px 35px -15px rgba(0, 0, 0, 0.3);
+    }
+
+    .skill-category:hover {
+        border-color: rgba(0, 102, 255, 0.25);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px -15px var(--accent-glow);
+    }
+
+    /* Skill Category Title */
+    .skill-category h3 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    /* Vertical Accent Line */
+    .skill-category h3::before {
+        content: '';
+        display: inline-block;
+        width: 4px;
+        height: 20px;
+        background-color: var(--accent-color);
+        border-radius: 10px;
+    }
+
+    /* Horizontal Capsule Grid Layout */
+    .skills-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* Capsule Item Styling */
+    .skills-grid li {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        background-color: var(--bg-base);
+        border: 1px solid var(--border-glow);
+        padding: 10px 24px;
+        border-radius: 100px;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: default;
+    }
+
+    /* Capsule Hover Effect */
+    .skills-grid li:hover {
+        color: var(--accent-color);
+        background-color: var(--accent-glow);
+        border-color: var(--accent-color);
+        transform: scale(1.05);
+    }
+
+    @keyframes pageReveal {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+        .skill-category { padding: 24px; }
+        .skills-grid li { font-size: 0.85rem; padding: 8px 18px; }
+        .skills-title h2 { font-size: 1.8rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container skills-section">
+    
+    <div class="skills-title">
+        <h2>Technical Core Competencies</h2>
+        <p>Integration of manufacturing process engineering, field instrumentation, advanced process control architectures, and intelligent systems optimized for efficiency and reliability in modern Pulp & Paper plants.</p>
+    </div>
+
+    <div class="skills-container">
+
+        <div class="skill-category">
+            <h3>Pulping Process Engineering</h3>
+            <ul class="skills-grid">
+                <li>Chemical Recovery Loop</li>
+                <li>Digester Control Optimization</li>
+                <li>Bleaching Plant Control Systems</li>
+                <li>Evaporator & Lime Kiln Control</li>
+                <li>Stock Preparation & Refining</li>
+                <li>Fiberline Optimization</li>
+            </ul>
+        </div>
+
+        <div class="skill-category">
+            <h3>Paper Manufacturing & Quality Systems</h3>
+            <ul class="skills-grid">
+                <li>DCS Paper Machine Operation</li>
+                <li>Quality Control System (QCS)</li>
+                <li>Moisture & Basis Weight Control</li>
+                <li>Steam & Condensate Systems</li>
+                <li>Calendering & Winder Automation</li>
+                <li>Coatings & Wet End Chemistry Control</li>
+            </ul>
+        </div>
+
+        <div class="skill-category">
+            <h3>Automation & Intelligent Systems</h3>
+            <ul class="skills-grid">
+                <li>PLC & DCS Programming</li>
+                <li>SCADA & HMI Development</li>
+                <li>Industrial Instrumentation (Sensors & Actuators)</li>
+                <li>PID Tuning & Advanced Process Control (APC)</li>
+                <li>Python & Machine Learning for Predictive Maintenance</li>
+                <li>Industrial Communication Protocols</li>
+            </ul>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

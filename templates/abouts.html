@@ -1,0 +1,744 @@
+{% extends "base.html" %}
+{% block title %}About - Portfolio{% endblock %}
+
+{% block content %}
+<style>
+    /* Global Container Setup & CSS Variables */
+    :root {
+        --bg-glass: rgba(255, 255, 255, 0.7);
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --accent-glow: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+        --card-border: rgba(226, 232, 240, 0.8);
+        
+        /* Member Specific Accent Colors */
+        --color-1: #6366f1; /* Indigo */
+        --color-2: #ec4899; /* Pink */
+        --color-3: #10b981; /* Emerald */
+        --color-4: #f59e0b; /* Amber */
+        --color-5: #3b82f6; /* Blue */
+        --color-6: #8b5cf6; /* Purple */
+    }
+
+    .project-team-container {
+        max-width: 1200px;
+        margin: 60px auto;
+        padding: 0 24px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Header Styling */
+    .header-section {
+        text-align: center;
+        margin-bottom: 60px;
+        position: relative;
+    }
+
+    .page-title {
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.04em;
+        margin-bottom: 12px;
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Card Wrapper with Bento-Grid Touch */
+    .member-profile-card {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 45px;
+        margin-bottom: 45px;
+        padding: 35px;
+        background: #ffffff;
+        border: 1px solid var(--card-border);
+        border-radius: 24px;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                    border-color 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .member-profile-card:hover {
+        transform: translateY(-6px) scale(1.005);
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.08);
+        border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    /* Left Sidebar Panel - Futuristic Dark Concept */
+    .profile-sidebar {
+        background: #0f172a;
+        padding: 30px 24px;
+        border-radius: 20px;
+        color: #ffffff;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.3);
+    }
+
+    /* Dynamic Radial Glow Follows Mouse */
+    .profile-sidebar::before {
+        content: '';
+        position: absolute;
+        top: var(--mouse-y, 0px);
+        left: var(--mouse-x, 0px);
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    .profile-sidebar:hover::before {
+        opacity: 1;
+    }
+
+    /* Avatar Interactive Effect */
+    .profile-avatar-wrapper {
+        position: relative;
+        overflow: hidden;
+        border-radius: 14px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .profile-avatar {
+        width: 100%;
+        height: auto;
+        display: block;
+        transform: scale(1);
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+    }
+
+    .member-profile-card:hover .profile-avatar {
+        transform: scale(1.06);
+    }
+
+    .profile-sidebar h2 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0 0 4px 0;
+        background: linear-gradient(120deg, #ffffff, #cbd5e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .profile-nim {
+        font-size: 0.85rem;
+        color: #38bdf8;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        margin-bottom: 16px;
+    }
+
+    .profile-quote {
+        font-size: 0.88rem;
+        font-style: italic;
+        line-height: 1.6;
+        color: #94a3b8;
+        margin-bottom: 25px;
+        padding-left: 14px;
+        border-left: 3px solid #6366f1;
+    }
+
+    /* Modern UI Action Buttons / Pills */
+    .dashboard-action-links {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border-top: 1px solid #334155;
+        padding-top: 20px;
+    }
+
+    .dashboard-action-links a {
+        font-size: 0.82rem;
+        color: #e2e8f0;
+        background: rgba(255, 255, 255, 0.04);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.3s ease;
+    }
+
+    .dashboard-action-links a span {
+        transition: transform 0.3s ease;
+        font-weight: bold;
+        color: #38bdf8;
+    }
+
+    .dashboard-action-links a:hover {
+        background: #6366f1;
+        color: #ffffff;
+        border-color: #6366f1;
+        box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+    }
+
+    .dashboard-action-links a:hover span {
+        transform: translateX(4px);
+        color: #ffffff;
+    }
+
+    /* Right Column: Colorful Interactive Timelines */
+    .timeline-container {
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .timeline-container::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 30px;
+        bottom: 30px;
+        width: 2px;
+        background: linear-gradient(to bottom, #cbd5e1 0%, #f1f5f9 100%);
+        z-index: 1;
+    }
+
+    .timeline-section-title {
+        display: inline-block;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+        padding: 6px 16px;
+        border-radius: 30px;
+        margin: 25px 0 25px -30px;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .badge-experience {
+        background: #e0f2fe;
+        color: #0369a1;
+    }
+
+    .badge-education {
+        background: #fef3c7;
+        color: #b45309;
+    }
+
+    .timeline-row {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 20px;
+        margin-bottom: 22px;
+        position: relative;
+        z-index: 2;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Colorful Timeline Node Icons */
+    .timeline-row::before {
+        content: '';
+        position: absolute;
+        left: -34px;
+        top: 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #cbd5e1;
+        border: 2px solid #ffffff;
+        transition: all 0.4s ease;
+        box-shadow: 0 0 0 0px transparent;
+    }
+
+    .timeline-row:hover {
+        transform: translateX(8px);
+    }
+
+    /* Member-specific hover effects handled dynamically via custom classes below */
+    .member-1 .timeline-row:hover::before { background-color: var(--color-1); box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.2); }
+    .member-2 .timeline-row:hover::before { background-color: var(--color-2); box-shadow: 0 0 0 6px rgba(236, 72, 153, 0.2); }
+    .member-3 .timeline-row:hover::before { background-color: var(--color-3); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.2); }
+    .member-4 .timeline-row:hover::before { background-color: var(--color-4); box-shadow: 0 0 0 6px rgba(245, 158, 171, 0.2); }
+    .member-5 .timeline-row:hover::before { background-color: var(--color-5); box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.2); }
+    .member-6 .timeline-row:hover::before { background-color: var(--color-6); box-shadow: 0 0 0 6px rgba(139, 92, 246, 0.2); }
+
+    .member-1 .timeline-row:hover h4 { color: var(--color-1); }
+    .member-2 .timeline-row:hover h4 { color: var(--color-2); }
+    .member-3 .timeline-row:hover h4 { color: var(--color-3); }
+    .member-4 .timeline-row:hover h4 { color: var(--color-4); }
+    .member-5 .timeline-row:hover h4 { color: var(--color-5); }
+    .member-6 .timeline-row:hover h4 { color: var(--color-6); }
+
+    .timeline-year {
+        font-size: 0.88rem;
+        color: var(--text-secondary);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .timeline-details h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 4px 0;
+        transition: color 0.3s ease;
+    }
+
+    .timeline-details p {
+        font-size: 0.88rem;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .member-profile-card {
+            grid-template-columns: 1fr;
+            gap: 35px;
+            padding: 25px;
+        }
+        .profile-sidebar {
+            height: auto;
+        }
+        .timeline-container::after {
+            left: 10px;
+        }
+        .timeline-row {
+            grid-template-columns: 1fr;
+            gap: 4px;
+            padding-left: 25px;
+        }
+        .timeline-row::before {
+            left: -19px;
+        }
+        .timeline-section-title {
+            margin-left: -15px;
+        }
+    }
+</style>
+
+<div class="project-team-container">
+    <div class="header-section">
+        <h1 class="page-title">Project Team</h1>
+        <p class="page-subtitle">A professional showcase of our dedicated team members, academic records, and technical competence timelines.</p>
+    </div>
+
+    <div class="member-profile-card member-1">
+        <div class="profile-sidebar">
+            <div>
+                <div class="profile-avatar-wrapper">
+                    <img src="static/images/Chintya.jpeg" class="profile-avatar" alt="Chintya Isya Ababil">
+                </div>
+                <h2>Chintya Isya Ababil</h2>
+                <div class="profile-nim">2407013275</div>
+                <p class="profile-quote">"Success doesn't belong to the smartest, but to those who never give up."</p>
+            </div>
+            <div class="dashboard-action-links">
+                <a href="http://localhost:8503" target="_blank">Fiberline Dashboard <span>→</span></a>
+                <a href="http://localhost:8503" target="_blank">Pulp Dryer Dashboard <span>→</span></a>
+            </div>
+        </div>
+        <div class="timeline-container">
+            <span class="timeline-section-title badge-experience">Experience</span>
+            <div class="timeline-row">
+                <div class="timeline-year">2042 – 2066</div>
+                <div class="timeline-details"><h4>Head Department Fiberline</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2039 – 2042</div>
+                <div class="timeline-details"><h4>Fiberline Superintendent</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2036 – 2039</div>
+                <div class="timeline-details"><h4>Fiberline Supervisor</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2033 – 2036</div>
+                <div class="timeline-details"><h4>Shift Leader Fiberline</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2030 – 2033</div>
+                <div class="timeline-details"><h4>Senior Operator Fiberline</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2027 – 2030</div>
+                <div class="timeline-details"><h4>Operator Fiberline</h4><p>PT RAPP</p></div>
+            </div>
+
+            <span class="timeline-section-title badge-education">Education</span>
+            <div class="timeline-row">
+                <div class="timeline-year">2024 - 2027</div>
+                <div class="timeline-details"><h4>Higher Education / University</h4><p>Universitas Riau</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2021 – 2024</div>
+                <div class="timeline-details"><h4>Senior High School</h4><p>SMAN 03 Mandau</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2018 – 2021</div>
+                <div class="timeline-details"><h4>Junior High School</h4><p>SMPN 04 Bathin Solapan</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2012 – 2018</div>
+                <div class="timeline-details"><h4>Elementary School</h4><p>SDN 51 Balai Makam</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2011 – 2012</div>
+                <div class="timeline-details"><h4>Kindergarten</h4><p>TK Rassya Al-Fikri</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="member-profile-card member-2">
+        <div class="profile-sidebar">
+            <div>
+                <div class="profile-avatar-wrapper">
+                    <img src="static/images/Maulana.jpeg" class="profile-avatar" alt="Maulana Ibrahim">
+                </div>
+                <h2>Maulana Ibrahim</h2>
+                <div class="profile-nim">2407011493</div>
+                <p class="profile-quote">"If I lose it all, slip and fall, I will never look away."</p>
+            </div>
+            <div class="dashboard-action-links">
+                <a href="http://192.168.1.22:8501" target="_blank">Power Boiler Dashboard <span>→</span></a>
+                <a href="http://localhost:8502" target="_blank">Recovery Boiler Dashboard <span>→</span></a>
+            </div>
+        </div>
+        <div class="timeline-container">
+            <span class="timeline-section-title badge-experience">Experience</span>
+            <div class="timeline-row">
+                <div class="timeline-year">2050 - Present</div>
+                <div class="timeline-details"><h4>Minister of Energy and Mineral Resources</h4><p>Indonesia</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2048 - 2050</div>
+                <div class="timeline-details"><h4>National Energy Industry Executive</h4><p>Indonesia</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2042 - 2048</div>
+                <div class="timeline-details"><h4>Mill Utility Director / General Manager Utility</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2037 - 2042</div>
+                <div class="timeline-details"><h4>Head Department Power Plant</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2035 - 2037</div>
+                <div class="timeline-details"><h4>Production Superintendent Power Plant</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2032 - 2035</div>
+                <div class="timeline-details"><h4>Power Plant Supervisor</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2030 - 2032</div>
+                <div class="timeline-details"><h4>Senior Operator Power Plant</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2027 - 2030</div>
+                <div class="timeline-details"><h4>Operator Power Plant</h4><p>PT RAPP</p></div>
+            </div>
+
+            <span class="timeline-section-title badge-education">Education</span>
+            <div class="timeline-row">
+                <div class="timeline-year">2024 - 2027</div>
+                <div class="timeline-details"><h4>Higher Education / University</h4><p>Universitas Riau</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2021 - 2024</div>
+                <div class="timeline-details"><h4>Senior High School</h4><p>SMAN 1 Pangkalan Kerinci</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2018 - 2021</div>
+                <div class="timeline-details"><h4>Junior High School</h4><p>SMPN 1 Pangkalan Kerinci</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2012 - 2018</div>
+                <div class="timeline-details"><h4>Elementary School</h4><p>SDN 007 Pangkalan Kerinci</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2011 - 2012</div>
+                <div class="timeline-details"><h4>Kindergarten</h4><p>TK Al-Faizin Pangkalan Kerinci</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="member-profile-card member-3">
+        <div class="profile-sidebar">
+            <div>
+                <div class="profile-avatar-wrapper">
+                    <img src="static/images/Harits.jpeg" class="profile-avatar" alt="Muhammad Harits Ihsan">
+                </div>
+                <h2>Muhammad Harits Ihsan</h2>
+                <div class="profile-nim">2407013603</div>
+                <p class="profile-quote">"I will beat Future Funk soon."</p>
+            </div>
+            <div class="dashboard-action-links">
+                <a href="http://localhost:8503" target="_blank">Water Treatment Plant Dashboard <span>→</span></a>
+                <a href="http://localhost:8503" target="_blank">Waste Water Treatment Dashboard <span>→</span></a>
+            </div>
+        </div>
+        <div class="timeline-container">
+            <span class="timeline-section-title badge-experience">Experience</span>
+            <div class="timeline-row">
+                <div class="timeline-year">2037 - 2050</div>
+                <div class="timeline-details"><h4>Head Department WTP & WWTP</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2030 - 2037</div>
+                <div class="timeline-details"><h4>Water Treatment Superintendent</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2028 - 2030</div>
+                <div class="timeline-details"><h4>WTP/WWTP Operator</h4><p>PT RAPP</p></div>
+            </div>
+
+            <span class="timeline-section-title badge-education">Education</span>
+            <div class="timeline-row">
+                <div class="timeline-year">2024 - 2028</div>
+                <div class="timeline-details"><h4>Higher Education / University</h4><p>Universitas Riau</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2021 - 2024</div>
+                <div class="timeline-details"><h4>Senior High School</h4><p>MAN 2 Pekanbaru</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2018 - 2021</div>
+                <div class="timeline-details"><h4>Junior High School</h4><p>MTsN 1 Pekanbaru</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2012 - 2018</div>
+                <div class="timeline-details"><h4>Elementary School</h4><p>SD Annur Pekanbaru</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2011 - 2012</div>
+                <div class="timeline-details"><h4>Kindergarten</h4><p>Akramunnas</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="member-profile-card member-4">
+        <div class="profile-sidebar">
+            <div>
+                <div class="profile-avatar-wrapper">
+                    <img src="static/images/Sella.jpeg" class="profile-avatar" alt="Sella Siktia Cahayani">
+                </div>
+                <h2>Sella Siktia Cahayani</h2>
+                <div class="profile-nim">2407011221</div>
+                <p class="profile-quote">"If you want the cooperation of humans around you, you must make them feel important and you do that by being genuine and humble."</p>
+            </div>
+            <div class="dashboard-action-links">
+                <a href="http://localhost:8503" target="_blank">Paper Machine Dashboard <span>→</span></a>
+                <a href="http://localhost:8503" target="_blank">Paper Finishing Dashboard <span>→</span></a>
+            </div>
+        </div>
+        <div class="timeline-container">
+            <span class="timeline-section-title badge-experience">Experience</span>
+            <div class="timeline-row">
+                <div class="timeline-year">2037 – Present</div>
+                <div class="timeline-details"><h4>Head Department Paper Machine</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2035 – 2037</div>
+                <div class="timeline-details"><h4>Production Superintendent</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2032 – 2035</div>
+                <div class="timeline-details"><h4>Paper Machine Supervisor</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2030 – 2032</div>
+                <div class="timeline-details"><h4>Senior Operator Paper Machine</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2027 – 2030</div>
+                <div class="timeline-details"><h4>Operator Paper Machine</h4><p>PT RAPP</p></div>
+            </div>
+
+            <span class="timeline-section-title badge-education">Education</span>
+            <div class="timeline-row">
+                <div class="timeline-year">2024 - 2027</div>
+                <div class="timeline-details"><h4>Higher Education / University</h4><p>Universitas Riau</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2021 – 2024</div>
+                <div class="timeline-details"><h4>Senior High School</h4><p>SMAN Bernas Binsus</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2018 – 2021</div>
+                <div class="timeline-details"><h4>Junior High School</h4><p>SMPN 02 Pelalawan</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2012 – 2018</div>
+                <div class="timeline-details"><h4>Elementary School</h4><p>SDN 003 Pangkalan Kerinci</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2011 – 2012</div>
+                <div class="timeline-details"><h4>Kindergarten</h4><p>TK Islam Diponegoro</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="member-profile-card member-5">
+        <div class="profile-sidebar">
+            <div>
+                <div class="profile-avatar-wrapper">
+                    <img src="static/images/Seno.jpeg" class="profile-avatar" alt="Seno Aji Nugroho">
+                </div>
+                <h2>Seno Aji Nugroho</h2>
+                <div class="profile-nim">2407013850</div>
+                <p class="profile-quote">"Bukan hidup yang penting, tetapi hidup yang benar."</p>
+            </div>
+            <div class="dashboard-action-links">
+                <a href="http://localhost:8503" target="_blank">Board Machine Dashboard <span>→</span></a>
+                <a href="http://localhost:8503" target="_blank">Board Finishing Dashboard <span>→</span></a>
+            </div>
+        </div>
+        <div class="timeline-container">
+            <span class="timeline-section-title badge-experience">Experience</span>
+            <div class="timeline-row">
+                <div class="timeline-year">2039 - 2050</div>
+                <div class="timeline-details"><h4>Mill Director</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2037 - 2039</div>
+                <div class="timeline-details"><h4>Operations Manager</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2035 - 2037</div>
+                <div class="timeline-details"><h4>Production Superintendent</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2033 - 2035</div>
+                <div class="timeline-details"><h4>Senior Process Engineer</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2031 - 2033</div>
+                <div class="timeline-details"><h4>Process Engineer</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2029 - 2031</div>
+                <div class="timeline-details"><h4>Assistant Process Engineer</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2027 - 2029</div>
+                <div class="timeline-details"><h4>Production Operator</h4><p>PT RAPP</p></div>
+            </div>
+
+            <span class="timeline-section-title badge-education">Education</span>
+            <div class="timeline-row">
+                <div class="timeline-year">2024 - 2027</div>
+                <div class="timeline-details"><h4>Higher Education / University</h4><p>Universitas Riau</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2021 - 2024</div>
+                <div class="timeline-details"><h4>Senior High School</h4><p>SMAN 2 Pangkalan Kerinci</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2018 - 2021</div>
+                <div class="timeline-details"><h4>Junior High School</h4><p>SMPN 1 Mandau</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2012 - 2018</div>
+                <div class="timeline-details"><h4>Elementary School</h4><p>SD Swasta Muhammadiyah Mandau</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2011 - 2012</div>
+                <div class="timeline-details"><h4>Kindergarten</h4><p>TK Nur Ramadhani Mandau</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="member-profile-card member-6">
+        <div class="profile-sidebar">
+            <div>
+                <div class="profile-avatar-wrapper">
+                    <img src="static/images/Gea.jpeg" class="profile-avatar" alt="Sri Wahyuni Gea">
+                </div>
+                <h2>Sri Wahyuni Gea</h2>
+                <div class="profile-nim">2407013850</div>
+                <p class="profile-quote">"Everything can we achieve with God."</p>
+            </div>
+            <div class="dashboard-action-links">
+                <a href="http://localhost:8503" target="_blank">Yarn Machine Dashboard <span>→</span></a>
+                <a href="http://localhost:8503" target="_blank">Viscose Machine Dashboard <span>→</span></a>
+            </div>
+        </div>
+        <div class="timeline-container">
+            <span class="timeline-section-title badge-experience">Experience</span>
+            <div class="timeline-row">
+                <div class="timeline-year">2040 – 2065</div>
+                <div class="timeline-details"><h4>Head Department Rayon</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2038 – 2040</div>
+                <div class="timeline-details"><h4>Production Superintendent Rayon</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2035 – 2038</div>
+                <div class="timeline-details"><h4>Rayon Production Supervisor</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2032 – 2035</div>
+                <div class="timeline-details"><h4>Senior Operator Rayon</h4><p>PT RAPP</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2027 – 2032</div>
+                <div class="timeline-details"><h4>Operator Rayon</h4><p>PT RAPP</p></div>
+            </div>
+
+            <span class="timeline-section-title badge-education">Education</span>
+            <div class="timeline-row">
+                <div class="timeline-year">2024 - 2027</div>
+                <div class="timeline-details"><h4>Higher Education / University</h4><p>Universitas Riau</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2021 – 2024</div>
+                <div class="timeline-details"><h4>Senior High School</h4><p>SMAN 11 Pekanbaru</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2018 – 2021</div>
+                <div class="timeline-details"><h4>Junior High School</h4><p>SMPN 11 Pekanbaru</p></div>
+            </div>
+            <div class="timeline-row">
+                <div class="timeline-year">2012 – 2018</div>
+                <div class="timeline-details"><h4>Elementary School</h4><p>SDN 95 Pekanbaru</p></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // SCRIPT INTERAKTIF: Mendeteksi koordinat kursor di atas sidebar untuk efek Glow Aura
+    document.querySelectorAll('.profile-sidebar').forEach(sidebar => {
+        sidebar.addEventListener('mousemove', (e) => {
+            const rect = sidebar.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            sidebar.style.setProperty('--mouse-x', `${x}px`);
+            sidebar.style.setProperty('--mouse-y', `${y}px`);
+        });
+    });
+</script>
+{% endblock %}
